@@ -1,0 +1,53 @@
+
+LogisticRegression parameters:
+aggregationDepth: suggested depth for treeAggregate (>= 2) (default: 2)
+elasticNetParam: the ElasticNet mixing parameter, in range [0, 1]. For alpha = 0, the penalty is an L2 penalty. For alpha = 1, it is an L1 penalty (default: 0.0)
+family: The name of family which is a description of the label distribution to be used in the model. Supported options: auto, binomial, multinomial. (default: auto)
+featuresCol: features column name (default: features)
+fitIntercept: whether to fit an intercept term (default: true)
+labelCol: label column name (default: label)
+maxIter: maximum number of iterations (>= 0) (default: 100)
+predictionCol: prediction column name (default: prediction)
+probabilityCol: Column name for predicted class conditional probabilities. Note: Not all models output well-calibrated probability estimates! These probabilities should be treated as confidences, not precise probabilities (default: probability)
+rawPredictionCol: raw prediction (a.k.a. confidence) column name (default: rawPrediction)
+regParam: regularization parameter (>= 0) (default: 0.0)
+standardization: whether to standardize the training features before fitting the model (default: true)
+threshold: threshold in binary classification prediction, in range [0, 1] (default: 0.5)
+thresholds: Thresholds in multi-class classification to adjust the probability of predicting each class. Array must have length equal to the number of classes, with values > 0 excepting that at most one value may be 0. The class with largest value p/t is predicted, where p is the original probability of that class and t is the class's threshold (undefined)
+tol: the convergence tolerance for iterative algorithms (>= 0) (default: 1.0E-6)
+weightCol: weight column name. If this is not set or empty, we treat all instance weights as 1.0 (undefined)
+
+
+Model 1 was fit using parameters: {
+	logreg_82d9c6cb7ab4-aggregationDepth: 2,
+	logreg_82d9c6cb7ab4-elasticNetParam: 0.0,
+	logreg_82d9c6cb7ab4-family: auto,
+	logreg_82d9c6cb7ab4-featuresCol: features,
+	logreg_82d9c6cb7ab4-fitIntercept: true,
+	logreg_82d9c6cb7ab4-labelCol: label,
+	logreg_82d9c6cb7ab4-maxIter: 10,
+	logreg_82d9c6cb7ab4-predictionCol: prediction,
+	logreg_82d9c6cb7ab4-probabilityCol: probability,
+	logreg_82d9c6cb7ab4-rawPredictionCol: rawPrediction,
+	logreg_82d9c6cb7ab4-regParam: 0.01,
+	logreg_82d9c6cb7ab4-standardization: true,
+	logreg_82d9c6cb7ab4-threshold: 0.5,
+	logreg_82d9c6cb7ab4-tol: 1.0E-6
+}
+
+Model 2 was fit using parameters: {
+	logreg_82d9c6cb7ab4-aggregationDepth: 2,
+	logreg_82d9c6cb7ab4-elasticNetParam: 0.0,
+	logreg_82d9c6cb7ab4-family: auto,
+	logreg_82d9c6cb7ab4-featuresCol: features,
+	logreg_82d9c6cb7ab4-fitIntercept: true,
+	logreg_82d9c6cb7ab4-labelCol: label,
+	logreg_82d9c6cb7ab4-maxIter: 30,
+	logreg_82d9c6cb7ab4-predictionCol: prediction,
+	logreg_82d9c6cb7ab4-probabilityCol: myProbability,
+	logreg_82d9c6cb7ab4-rawPredictionCol: rawPrediction,
+	logreg_82d9c6cb7ab4-regParam: 0.1,
+	logreg_82d9c6cb7ab4-standardization: true,
+	logreg_82d9c6cb7ab4-threshold: 0.55,
+	logreg_82d9c6cb7ab4-tol: 1.0E-6
+}

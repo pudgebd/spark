@@ -1,0 +1,8 @@
+id1,user1,2,http://www.hupu.com,123
+id1,user1,2,http://www.douyu.com,124
+id3,user3,3,http://www.hupu.com,543
+id1,user1,100,http://www.baidu.com,62
+id2,user2,2,http://www.hupu.com,6234
+id4,user4,1,http://www.google.com,6521
+id4,user4,50,http://www.hupu.com,8732
+id2,user2,2,http://touzhu.hupu.com,215

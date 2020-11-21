@@ -1,0 +1,3 @@
+parrt   TP  101
+tombu   TB  020
+bke     KE  008

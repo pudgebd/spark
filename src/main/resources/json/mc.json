@@ -1,0 +1,275 @@
+[
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "存文件",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/024bcf13-7d04-42c3-991a-15fe395fca1c",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%221%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "新建事项",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/07381b72-debb-434e-94e1-64ca86462025",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%22note%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "创建日程",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/05c94a12-117f-47cd-bd60-bd41813dd932",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%22schedule%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "电话会议",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/05be2eb2-9072-4615-a829-0b4b88bbe80b",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%222%22%2C%22param%22%3A%22startcall%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "收邮件",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/02ebc771-f533-43a6-a118-361ee524e9ba",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%2216%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "发起聊天",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/0d72f7ba-84cb-4a01-a563-aad9a738f471",
+    "action_": "native://chat?data\u003d%7B%22type%22%3A2%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 0,
+    "appVer_": "5.4.0",
+    "name_": "健康计步",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/0643e319-8133-40d4-b132-0de2014869aa",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%227%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 1,
+    "appVer_": "5.5.0",
+    "name_": "审批2",
+    "imgUrl_": "http://10.0.10.31:8040/sfs/avatar?uid\u003d10102",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%225%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      125
+    ]
+  },
+  {
+    "type_": 1,
+    "appVer_": "5.5.0",
+    "name_": "审批1",
+    "imgUrl_": "http://10.0.10.31:8040/sfs/avatar?uid\u003d10102",
+    "action_": "native://openapp?data\u003d%7B%22appid%22%3A%225%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      34,
+      108,
+      111,
+      99,
+      97,
+      116,
+      105,
+      111,
+      110,
+      34,
+      58,
+      32,
+      50,
+      125
+    ]
+  },
+  {
+    "type_": 1,
+    "appVer_": "5.5.0",
+    "name_": "润滑油",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/0032bade-2a6a-4933-afbb-2d5e79c26502",
+    "action_": "native://openurl?data\u003d%7B%22url%22%3A%22http%3A%5C%2F%5C%2Fwww.hlbrdaily.com.cn%5C%2Fsyxw%5C%2F4279074.html%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      34,
+      108,
+      111,
+      99,
+      97,
+      116,
+      105,
+      111,
+      110,
+      34,
+      58,
+      32,
+      49,
+      125
+    ]
+  },
+  {
+    "type_": 1,
+    "appVer_": "5.5.0",
+    "name_": "红包",
+    "imgUrl_": "http://7xnmmr.com1.z0.glb.clouddn.com/001a578795d0348bdc7b9e981d22f9435088f5e4",
+    "action_": "native://openurl?data\u003d%7B%22url%22%3A%22http%3A%5C%2F%5C%2Fbaike.baidu.com%5C%2Flink%3Furl%3D0DXJNYHP_mc8kQ4RLQRIqaoXpl3qEXTZy4A6WxmNTJ_Vzj84WuPU3AQ055UQSOZcghwVb-z8nvSPqcX2uxyeq3xQQoL0V-FCz4VidwCYukq%22%7D",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      34,
+      108,
+      111,
+      99,
+      97,
+      116,
+      105,
+      111,
+      110,
+      34,
+      58,
+      32,
+      48,
+      125
+    ]
+  },
+  {
+    "type_": 2,
+    "appVer_": "5.3.0",
+    "descr_": "弹框测试1",
+    "imgUrl_": "http://7xnmmr.com2.z0.glb.qiniucdn.com/7d4c94a2-edf3-4891-89c0-de573a623752",
+    "action_": "native://openurl?data\u003d%7B%22url%22%3A%22taobao.com%22%7D",
+    "beginMs_": 1470286800000,
+    "endMs_": 1471588680000,
+    "extra_": [
+      123,
+      34,
+      117,
+      117,
+      105,
+      100,
+      34,
+      58,
+      34,
+      102,
+      100,
+      99,
+      57,
+      54,
+      56,
+      99,
+      101,
+      45,
+      49,
+      52,
+      100,
+      51,
+      45,
+      52,
+      98,
+      48,
+      98,
+      45,
+      57,
+      102,
+      49,
+      48,
+      45,
+      51,
+      101,
+      97,
+      49,
+      57,
+      48,
+      52,
+      100,
+      52,
+      49,
+      52,
+      98,
+      34,
+      125
+    ]
+  },
+  {
+    "type_": 5,
+    "appVer_": "5.5.0",
+    "name_": "无限次赚流量",
+    "imgUrl_": "http://10.0.10.31:8040/sfs/avatar?uid\u003d80872",
+    "beginMs_": 0,
+    "endMs_": 0,
+    "extra_": [
+      123,
+      34,
+      102,
+      111,
+      110,
+      116,
+      67,
+      111,
+      108,
+      111,
+      114,
+      34,
+      58,
+      34,
+      35,
+      102,
+      102,
+      98,
+      54,
+      99,
+      49,
+      34,
+      125
+    ]
+  }
+]
