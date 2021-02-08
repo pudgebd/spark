@@ -21,6 +21,8 @@ object dataSetOrFrame extends dsOrDfBasic {
     import spark.implicits._
 
     val ds = spark.read.textFile("src/main/resources/text/bs_0.txt")
+//    ds.rdd.coalesce()
+//    ds.rdd.repartition(1)
     val ds2 = ds.map(_.split(","))
       .map(row => PageView(row(0), row(1), row(2).toInt, row(3), row(4).toLong))
 

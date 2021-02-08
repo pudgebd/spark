@@ -1,6 +1,7 @@
 package test
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.storage.StorageLevel
 
 object LocalSpark {
 
@@ -10,7 +11,8 @@ object LocalSpark {
       .enableHiveSupport()
       .getOrCreate()
 
-    spark.sql("show create table ods_kafka.from_kafka_source").show(false)
+    spark.sql("show create table ods_kafka.from_kafka_source")
+      .unpersist()
 //    spark.sql("drop table ods_kafka.from_kafka_source")
 //    val sql =
 //      s"""
