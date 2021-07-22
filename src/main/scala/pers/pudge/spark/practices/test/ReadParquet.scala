@@ -16,7 +16,8 @@ object ReadParquet {
     import spark.implicits._
 
 //    val path = "/Users/chenqian/tmp/part-594402d2-9363-4bc6-af5e-26d5933c8913-0-6-15-58"
-    val path = "/Users/chenqian/tmp/part-594402d2-9363-4bc6-af5e-26d5933c8913-2-8-16-00"
+//    val path = "/Users/chenqian/tmp/part-594402d2-9363-4bc6-af5e-26d5933c8913-2-8-16-00"
+    val path = "/Users/chenqian/tmp/part-21fa7dbf-6633-4e00-b6eb-89382114cb46-1-8-17-49"
     spark.read.parquet(path)
       .select("ts").map(row => new Timestamp(row.getLong(0)))
       .show(100, false)
