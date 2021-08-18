@@ -21,16 +21,17 @@ object SSSqlGroupByWindow02 {
 
     spark.createDataset(Seq(
       SqlWinPo(1, new Timestamp(System.currentTimeMillis())),
-      SqlWinPo(2,  new Timestamp(System.currentTimeMillis()))
+      SqlWinPo(2, new Timestamp(System.currentTimeMillis()))
     )).createOrReplaceTempView("tb")
 
-    var sql = "select" +
+    val sql = "select" +
       "  count(1) as count," +
-      "  sum(total) as sum," +
+      "  sum(total) as sum, " +
       "  round(avg(total), 2) as avg " +
       "from tb" +
       "  group by window(time, '1 day', '1 day', '16 hours')"
-    spark.sql(sql).show()
+    val as = spark.sql(sql).queryExecution.toString()
+    println(as)
   }
 
 }

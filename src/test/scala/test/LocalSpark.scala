@@ -1,7 +1,6 @@
 package test
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.storage.StorageLevel
 
 object LocalSpark {
 
@@ -11,19 +10,40 @@ object LocalSpark {
       .enableHiveSupport()
       .getOrCreate()
 
-    spark.sql("show create table ods_kafka.from_kafka_source")
-      .unpersist()
-//    spark.sql("drop table ods_kafka.from_kafka_source")
-//    val sql =
-//      s"""
-//         |CREATE TABLE ods_kafka.from_kafka_source (
-//         | id long,
-//         | first STRING
-//         |) stored as parquet
-//       """.stripMargin
-//    spark.sql(sql)
-//    spark.sql("insert into ods_kafka.from_kafka_source values (1, 'a')")
-//    spark.sql("select * from ods_kafka.from_kafka_source").show()
+    val dbName = "bdp"
+    spark.sql(s"CREATE DATABASE IF NOT EXISTS $dbName LOCATION 'hdfs://127.0.0.1:8020/user/hive/warehouse/bdp.db'").show()
+    spark.sql(s"USE $dbName").show()
+
+//    for (sql <- sqls) {
+//      spark.sql(sql)
+//    }
+//    spark.sql("select count(1) from MyHiveDimTable").show()
+
+    //测试修改执行计划
+    //    spark.sql("select * from MyHiveDimTable where substring(dt, 9, 2) = '16'").show()
+//    spark.sql("select * from MyHiveDimTable where dt in ('2020-11-16')").show()
+    //    spark.sql("select substring(dt, 9, 2) from MyHiveDimTable").show()
   }
+
+  val sqls = Seq(
+    s"""
+       |CREATE TABLE MyHiveDimTable (
+       |    channel STRING,
+       |    name STRING
+       |) PARTITIONED BY (dt String) STORED AS parquet
+       """.stripMargin,
+
+    s"""
+       |insert into MyHiveDimTable partition(dt='2020-11-16') values ('p1', 'hvie_a16'), ('p2', 'hive_b16')
+     """.stripMargin,
+
+    s"""
+       |insert into MyHiveDimTable partition(dt='2020-11-17') values  ('p1', 'hive_a17'), ('p2', 'hive_b17')
+     """.stripMargin,
+
+    s"""
+       |insert into MyHiveDimTable partition(dt='2020-11-18') values  ('p1', 'hive_a18'), ('p2', 'hive_b18')
+     """.stripMargin
+  )
 
 }
