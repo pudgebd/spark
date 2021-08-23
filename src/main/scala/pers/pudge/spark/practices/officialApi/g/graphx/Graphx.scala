@@ -31,7 +31,7 @@ object Graphx extends GraphxBasic {
 
     val relationships: RDD[Edge[String]] = sc.parallelize(
       Seq(Edge(3L, 7L, "collab"), Edge(5L, 3L, "advisor"),
-        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi"), Edge(5L, 7L, "pi2")))
+        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi")))
     //     srcId, dstId, 边属性
 
     val defaultUser = ("Who", "Missing")
@@ -39,12 +39,12 @@ object Graphx extends GraphxBasic {
     // Build the initial Graph
     val graph = Graph(users, relationships, defaultUser)
 
-    aggregateMessages(spark)
+//    aggregateMessages(spark)
 //    checkpoint(graph)
 //    connectedComponents(graph)
 //    edges(graph)
 //    filter(graph)
-//    groupEdges(graph)
+    groupEdges(graph)
 //    logNormalGraph(sc)
 //    map(graph)
 //    mask(sc, graph)

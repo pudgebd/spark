@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.12"
 
-lazy val sparkVer = "2.4.0"
+lazy val sparkVer = "2.4.8"
 lazy val kafkaVer = "1.1.0"
 lazy val hadoopVer = "2.7.3"
 lazy val hbaseVer = "1.2.6"
