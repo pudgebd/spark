@@ -73,10 +73,14 @@ class GraphxHelper {
     graph.outDegrees.collect().foreach(e => println(e.toString))
   }
 
+  val toJoinVertexSeq = Seq((3L, 30), (7L, 70), (5L, 50), (2L, 20), (1L, 110))
 
+  /**
+    * 源码内，joinVertices使用的是下面的 outerJoinVertices
+    * 可以理解为，在改变vertex属性时，这个是 inner join，左边的点join不上右边的点时，左点属性不变
+    */
   def joinVertices(sc: SparkContext, graph: Graph[(String, String), String]) = {
-    val userAgeRDD: RDD[(VertexId, Int)] = sc.parallelize(
-      Seq((3L, 27), (7L, 31), (5L, 40), (2L, 42)))
+    val userAgeRDD: RDD[(VertexId, Int)] = sc.parallelize(toJoinVertexSeq)
 
     val newGraph = graph.joinVertices(userAgeRDD)((vid, vp1, vp2) => (vp1._1 + "_" + vp2, vp1._2))
     printTriplets(newGraph)
@@ -87,11 +91,13 @@ class GraphxHelper {
   //This function is used to update the vertices with new values based on external data.
   // For example we could add the out degree to each vertex record
 
+  /**
+    * 可以理解为，在改变vertex属性时，这个是 left outer join，左边的点join不上右边的点时，左点属性改变时使用一个默认值
+    */
   def outerJoinVertices(sc: SparkContext, graph: Graph[(String, String), String]) = {
     //FLOG.info(graph.outDegrees.count().toString) == 3
 
-    val userAgeRDD: RDD[(VertexId, Int)] = sc.parallelize(
-      Seq((3L, 30), (7L, 70), (5L, 50), (2L, 20), (1L, 10)))
+    val userAgeRDD: RDD[(VertexId, Int)] = sc.parallelize(toJoinVertexSeq)
 
     val newGraph =
       graph.outerJoinVertices[Int, (String, String)](userAgeRDD)(
@@ -113,17 +119,16 @@ class GraphxHelper {
     */
   def pregel(sc: SparkContext, graph: Graph[(String, String), String]) = {
     // A graph with edge attributes containing distances
-    val lng = GraphGenerators.logNormalGraph(sc, numVertices = 100)
+    val lng = GraphGenerators.logNormalGraph(sc, numVertices = 3)
     val graph: Graph[Long, Double] = lng.mapEdges(e => e.attr.toDouble)
     val sourceId: VertexId = 42 // The ultimate source
-
     // Initialize the graph such that all vertices except the root have distance infinity.
     val initialGraph = graph.mapVertices((id, _) =>
       if (id == sourceId) 0.0 else Double.PositiveInfinity)
 
     //在迭代计算的过程里，第一次的计算中，每个顶点都会收到initialMsg并参与计算。此后，只有收到消息的顶点才会参与计算。
     val sssp = initialGraph.pregel(Double.PositiveInfinity) (
-      (id, dist, newDist) => math.min(dist, newDist), // Vertex Program
+      (id, dist, newDist) => math.min(dist, newDist), //vprog：Vertex Program
 
       //pregel算法类似于一个循环，在这个循环中，必须有打破循环一直执行的变量的改变，
       // 这个变量的改变就是sendMsg中发送到某个顶点的信息。该方法应该只在适当的条件下对邻居节点产生影响。
@@ -144,6 +149,7 @@ class GraphxHelper {
     )
 
     println(sssp.vertices.collect.mkString("\n"))
+//    printTriplets()
   }
 
 

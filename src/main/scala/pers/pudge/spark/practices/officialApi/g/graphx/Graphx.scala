@@ -31,7 +31,7 @@ object Graphx extends GraphxBasic {
 
     val relationships: RDD[Edge[String]] = sc.parallelize(
       Seq(Edge(3L, 7L, "collab"), Edge(5L, 3L, "advisor"),
-        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi")))
+        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi"), Edge(11L, 2L, "stranger")))
     //     srcId, dstId, 边属性
 
     val defaultUser = ("Who", "Missing")

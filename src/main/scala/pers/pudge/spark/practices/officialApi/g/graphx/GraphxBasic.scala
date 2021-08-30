@@ -184,9 +184,9 @@ class GraphxBasic extends GraphxHelper {
 //    convertToCanonicalEdges(ops)
 //    degrees(graph)
 //    joinVertices(sc, graph)
-    outerJoinVertices(sc, graph)
+//    outerJoinVertices(sc, graph)
 //    pregel(sc, graph)
-//    pageRank(sc, ops)
+    pageRank(sc, ops)
 //    triangleCount(sc)
 
   }
