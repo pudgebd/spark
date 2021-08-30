@@ -92,7 +92,8 @@ libraryDependencies ++= Seq(
     "org.apache.poi" % "poi-ooxml" % "3.17",
     "org.apache.xmlbeans" % "xmlbeans" % "2.6.0",
     "org.apache.commons" % "commons-collections4" % "4.2",
-    "com.alibaba" % "fastjson" % "1.2.58"
+    "com.alibaba" % "fastjson" % "1.2.58",
+    "com.github.scopt" %% "scopt" % "3.7.1"
 
 ).map(_.exclude("org.slf4j", "*"))
 
