@@ -11,7 +11,7 @@ class GraphxHelper {
   /**
     * 打印谁是谁的什么（一个完整关系）
     */
-  def triplets(graph: Graph[(String, String), String]) = {
+  def printTriplets(graph: Graph[(String, String), String]) = {
     //           EdgeTriplet 就是边属性带上头尾两个点属性
     val tls: RDD[EdgeTriplet[(String, String), String]] = graph.triplets
 
@@ -61,7 +61,7 @@ class GraphxHelper {
     */
   def convertToCanonicalEdges(ops: GraphOps[(String, String), String]) = {
     val newGraph = ops.convertToCanonicalEdges((ed1, ed2) => ed1 + " and " + ed2)
-    triplets(newGraph)
+    printTriplets(newGraph)
   }
 
 
@@ -79,7 +79,7 @@ class GraphxHelper {
       Seq((3L, 27), (7L, 31), (5L, 40), (2L, 42)))
 
     val newGraph = graph.joinVertices(userAgeRDD)((vid, vp1, vp2) => (vp1._1 + "_" + vp2, vp1._2))
-    triplets(newGraph)
+    printTriplets(newGraph)
   }
 
 
@@ -91,7 +91,7 @@ class GraphxHelper {
     //FLOG.info(graph.outDegrees.count().toString) == 3
 
     val userAgeRDD: RDD[(VertexId, Int)] = sc.parallelize(
-      Seq((3L, 27), (7L, 31), (5L, 40), (2L, 42), (1L, 42)))
+      Seq((3L, 30), (7L, 70), (5L, 50), (2L, 20), (1L, 10)))
 
     val newGraph =
       graph.outerJoinVertices[Int, (String, String)](userAgeRDD)(
@@ -99,7 +99,7 @@ class GraphxHelper {
           (vp1._1 + "_" + optVp2.getOrElse(0), vp1._2)
         }
       )
-    triplets(newGraph)
+    printTriplets(newGraph)
   }
 
 

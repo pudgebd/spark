@@ -43,7 +43,7 @@ class CrGraphxBasic extends CrGraphxHelper with Serializable {
 //    vertics.collect().foreach(println(_))
     val graph = Graph(vertics, csmRoomRdd)
 
-//    graph.triplets.collect().foreach(triplet => {
+//    graph.printTriplets.collect().foreach(triplet => {
 //      println(triplet.srcId + " is the " + triplet.attr + " of " + triplet.dstId)
 //    })
 

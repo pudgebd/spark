@@ -1,4 +1,4 @@
-package test
+package tesmyhivedimtablet
 
 import org.apache.spark.sql.SparkSession
 
@@ -11,13 +11,13 @@ object LocalSpark {
       .getOrCreate()
 
     val dbName = "bdp"
-    spark.sql(s"CREATE DATABASE IF NOT EXISTS $dbName LOCATION 'hdfs://127.0.0.1:8020/user/hive/warehouse/bdp.db'").show()
+//    spark.sql(s"CREATE DATABASE IF NOT EXISTS $dbName LOCATION 'hdfs://127.0.0.1:8020/user/hive/warehouse/bdp.db'").show()
     spark.sql(s"USE $dbName").show()
 
 //    for (sql <- sqls) {
 //      spark.sql(sql)
 //    }
-//    spark.sql("select count(1) from MyHiveDimTable").show()
+    spark.sql("select count(1) from MyHiveDimTable").show()
 
     //测试修改执行计划
     //    spark.sql("select * from MyHiveDimTable where substring(dt, 9, 2) = '16'").show()

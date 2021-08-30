@@ -66,7 +66,7 @@ object KafkaSsForGraphx extends GraphxHelper {
       //打印
       val after = graph.partitionBy(PartitionStrategy.RandomVertexCut)
         .groupEdges((e1, e2) => e1 + " and " + e2)
-      triplets(after)
+      printTriplets(after)
       graph.unpersist()
     })
     .start()

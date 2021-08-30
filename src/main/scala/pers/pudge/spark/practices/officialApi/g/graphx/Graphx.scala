@@ -44,13 +44,13 @@ object Graphx extends GraphxBasic {
 //    connectedComponents(graph)
 //    edges(graph)
 //    filter(graph)
-    groupEdges(graph)
+//    groupEdges(graph)
 //    logNormalGraph(sc)
 //    map(graph)
 //    mask(sc, graph)
-//    ops(sc, graph)
-//    triplets(graph)
-//    triplets(graph.subgraph(et => true, (vid, vp) => true))
+    ops(sc, graph)
+//    printTriplets(graph)
+//    printTriplets(graph.subgraph(et => true, (vid, vp) => true))
 
 //    example(sc)
 

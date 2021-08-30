@@ -104,7 +104,7 @@ class GraphxBasic extends GraphxHelper {
     val otherGraph = Graph(users2, relationships2).partitionBy(PartitionStrategy.CanonicalRandomVertexCut)
 
     val maskedGraph = graph.partitionBy(PartitionStrategy.CanonicalRandomVertexCut).mask(otherGraph)
-    triplets(maskedGraph)
+    printTriplets(maskedGraph)
   }
 
 
@@ -117,7 +117,10 @@ class GraphxBasic extends GraphxHelper {
 
     // Compute the number of older followers and their total age
     val olderFollowers: VertexRDD[(Int, Double)] = graph.aggregateMessages[(Int, Double)](
-      //                       VD     ED      A(消息类型)
+
+      //                                    A 一个tuple (graphx.VertexId, VD)
+      //                       VD     ED    也就是上面的 VertexRDD[(Int, Double)]
+      //triplet: EdgeContext[Double, Int, (Int, Double)]
       triplet => { // sendMsg: Map Function
         if (triplet.srcAttr > triplet.dstAttr) {
           // Send message to destination vertex containing counter and age
@@ -165,7 +168,7 @@ class GraphxBasic extends GraphxHelper {
   def groupEdges(graph: Graph[(String, String), String]) = {
     val grp = graph.partitionBy(PartitionStrategy.RandomVertexCut)
       .groupEdges((e1, e2) => e1 + " and " + e2)
-    triplets(grp)
+    printTriplets(grp)
   }
 
 
@@ -181,7 +184,7 @@ class GraphxBasic extends GraphxHelper {
 //    convertToCanonicalEdges(ops)
 //    degrees(graph)
 //    joinVertices(sc, graph)
-//    outerJoinVertices(sc, graph)
+    outerJoinVertices(sc, graph)
 //    pregel(sc, graph)
 //    pageRank(sc, ops)
 //    triangleCount(sc)
