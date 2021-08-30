@@ -9,7 +9,7 @@ object JsonToAvro {
       .master("local[*]")
       .getOrCreate()
 
-//    spark.read.json("file:///Users/chenqian/work_doc/sqls/flink_sql/debugsql/test_debug_sql_input_data.json")
+//    spark.read.json("file:///Users/pudgebd/work_doc/sqls/flink_sql/debugsql/test_debug_sql_input_data.json")
 //      .write.format()
     //      .printSchema()
     //.show()

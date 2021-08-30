@@ -16,7 +16,7 @@ object KafkaSSForeach {
 
   var CHECK_POINT_DIR = "hdfs://localhost:8020/user/pudgebd/checkpoint/structuredStreaming/kafkaSSSql/"
   val HDFS_OUTPUT_PATH = "hdfs://localhost:8020/user/pudgebd/output/kafkaSSSql"
-  ///Users/chenqian/tmp/kafkaSSSql
+  ///Users/pudgebd/tmp/kafkaSSSql
   val LOCAL_HIVE_TABLE = "local_hive_table"
 
   def main(args: Array[String]): Unit = {

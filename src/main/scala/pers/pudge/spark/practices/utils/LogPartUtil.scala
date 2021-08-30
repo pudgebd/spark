@@ -6,10 +6,10 @@ import org.apache.spark.sql.functions._
 
 object LogPartUtil {
 
-  val logPath = "/Users/chenqian/tmp/boot_2021-08-17.log"
+  val logPath = "/Users/pudgebd/tmp/boot_2021-08-17.log"
   val logBegin = "INFO 21/08/17 19"
   val logEnd = "INFO 21/08/18 00"
-  val savePath = "/Users/chenqian/tmp/boot_2021-08-17_19dian_00dian.log"
+  val savePath = "/Users/pudgebd/tmp/boot_2021-08-17_19dian_00dian.log"
 
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder.appName("LocalSpark")

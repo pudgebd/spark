@@ -25,7 +25,7 @@ object KafkaSSSqlWindow {
 
   var CHECK_POINT_DIR = "hdfs://localhost:8020/user/pudgebd/checkpoint/structuredStreaming/kafkaSSSqlWindow_" + System.currentTimeMillis()
   val HDFS_OUTPUT_PATH = "hdfs://localhost:8020/user/pudgebd/output/kafkaSSSqlWindow"
-  ///Users/chenqian/tmp/kafkaSSSql
+  ///Users/pudgebd/tmp/kafkaSSSql
   val LOCAL_HIVE_TABLE = "local_hive_table"
 
   def main(args: Array[String]): Unit = {

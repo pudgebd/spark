@@ -43,9 +43,8 @@ object SSSqlGroupByWindow01 {
     spark.sql(sql)
       .writeStream
       .outputMode("update")
-      .option("checkpointLocation", "/Users/chenqian/tmp/streaming/mobius_log_monitor")
+      .option("checkpointLocation", "/Users/pudgebd/tmp/streaming/mobius_log_monitor")
       .option("baseUrl", "http://localhost:5000/data")
-//      .format("com.haizhi.mobius.spark.HttpSinkProvider")
       .format(Key.CONSOLE)
       .trigger(Trigger.ProcessingTime("1 seconds"))
       .queryName("mobius monitor by day")
@@ -61,7 +60,6 @@ object SSSqlGroupByWindow01 {
 //      .outputMode("update")
 //      .option("checkpointLocation", "/streaming/mobius_log_monitor_min")
 //      .option("baseUrl", "http://localhost:5000/data")
-//      .format("com.haizhi.mobius.spark.HttpSinkProvider")
 //      .trigger(Trigger.ProcessingTime("1 minutes"))
 //      .queryName("mobius monitor 1 minute")
 //      .start()
