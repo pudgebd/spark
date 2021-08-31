@@ -67,6 +67,7 @@ class LouvainHarness(minProgress: Int, progressCounter: Int) {
     } while (!halt)
 
     finalSave(sc, level, q, louvainGraph)
+    louvainGraph.unpersist()
   }
 
   /**

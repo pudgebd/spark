@@ -45,6 +45,7 @@ object LouvainCore {
       state
     }).partitionBy(PartitionStrategy.EdgePartition2D).groupEdges(_ + _)
 
+    nodeWeights.unpersist()
     return louvainGraph
   }
 
@@ -122,9 +123,9 @@ object LouvainCore {
       msgRDD = louvainGraph.aggregateMessages(sendMsgNew, mergeMsg).persist(StorageLevel.MEMORY_AND_DISK_SER)
       //activeMessages = msgRDD.count() // materializes the graph by forcing computation
 
-      oldMsgs.unpersist(blocking = false)
-      updatedVerts.unpersist(blocking = false)
-      prevG.unpersistVertices(blocking = false)
+      oldMsgs.unpersist()
+      updatedVerts.unpersist()
+      prevG.unpersist()
 
       // half of the communites can swtich on even cycles
       // and the other half on odd cycles (to prevent deadlocks)

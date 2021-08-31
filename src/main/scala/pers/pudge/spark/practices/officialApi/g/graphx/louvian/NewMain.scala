@@ -95,6 +95,7 @@ object NewMain {
     // if the parallelism option was set map the input to the correct number of partitions,
     // otherwise parallelism will be based off number of HDFS blocks
     if (parallelism != -1) offlineEdgeRDD = offlineEdgeRDD.coalesce(parallelism, shuffle = true)
+    offlineEdgeRDD.setName("offlineEdgeRDD first load")
     offlineEdgeRDD.persist(StorageLevel.MEMORY_AND_DISK_SER)
 
     //读取实时边数据，每10秒计算一次
@@ -116,6 +117,7 @@ object NewMain {
         Seq(Edge(arr(0).toLong, arr(1).toLong, arr(2).toLong))
       })
 
+    var offlineEdgeRddVer = 0
     var kafkaEdgeRdd: RDD[Edge[Long]] = null
     var mergeKafkaToOfflineCounter = 0
 
@@ -126,17 +128,21 @@ object NewMain {
 
       //合并后离线和实时边数据
       var allEdgeRDD: RDD[Edge[Long]] = null
+      var needUpdateOfflineRdd = false
+
       if (kafkaEdgeRdd == null) {
         kafkaEdgeRdd = ds.rdd
+        kafkaEdgeRdd.setName("kafkaEdgeRdd == null")
         kafkaEdgeRdd.persist(StorageLevel.MEMORY_AND_DISK_SER)
-        allEdgeRDD = kafkaEdgeRdd
+        allEdgeRDD = offlineEdgeRDD.union(kafkaEdgeRdd)
+        allEdgeRDD.setName("allEdgeRDD (kafkaEdgeRdd == null)")
 
       } else {
         val newBatchEdgeRdd = kafkaEdgeRdd.union(ds.rdd)
         kafkaEdgeRdd.unpersist()
         kafkaEdgeRdd = newBatchEdgeRdd
+        kafkaEdgeRdd.setName(s"kafkaEdgeRdd mergeKafkaToOfflineCounter: $mergeKafkaToOfflineCounter")
 
-        var needUpdateOfflineRdd = false
         mergeKafkaToOfflineCounter += 1
 
         if (mergeKafkaToOfflineCounter == 3) {
@@ -148,22 +154,33 @@ object NewMain {
         }
 
         allEdgeRDD = offlineEdgeRDD.union(kafkaEdgeRdd)
+        allEdgeRDD.setName("allEdgeRDD (kafkaEdgeRdd != null)")
         if (needUpdateOfflineRdd) {
+          offlineEdgeRDD.unpersist()
+          allEdgeRDD.persist(StorageLevel.MEMORY_AND_DISK_SER)
+          offlineEdgeRDD = allEdgeRDD
+          offlineEdgeRDD.setName(s"offlineEdgeRDD ver: $offlineEdgeRddVer")
+          offlineEdgeRddVer += 1
+
           kafkaEdgeRdd.unpersist()
-          kafkaEdgeRdd = allEdgeRDD
-          kafkaEdgeRdd.persist(StorageLevel.MEMORY_AND_DISK_SER)
+          kafkaEdgeRdd = null
         }
       }
 
       // create the graph
-      val graph = Graph.fromEdges(allEdgeRDD, None, StorageLevel.MEMORY_AND_DISK_SER, StorageLevel.MEMORY_AND_DISK_SER)
+      val graph = Graph.fromEdges(allEdgeRDD, None,
+        StorageLevel.MEMORY_AND_DISK_SER, StorageLevel.MEMORY_AND_DISK_SER)
+      if (!needUpdateOfflineRdd) {
+        allEdgeRDD.unpersist()
+      }
 
       // use a helper class to execute the louvain
       // algorithm and save the output.
       // to change the outputs you can extend LouvainRunner.scala
       val runner = new HDFSLouvainRunner(minProgress, progressCounter, outputdir)
+      graph.persist(StorageLevel.MEMORY_AND_DISK_SER)
       runner.run(sc, graph)
-
+      graph.unpersist()
     })
       .start()
 
