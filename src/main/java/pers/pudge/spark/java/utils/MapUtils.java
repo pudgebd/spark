@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * @author chen qian
  * @version 1.4.2
  */
 public class MapUtils {

@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object GenHdfsData {
 
-  val EDGE_TEST_DATA_PATH = "hdfs://cdh601:8020/user/chenqian/test/data/edges.txt"
+  val EDGE_TEST_DATA_PATH = "hdfs://cdh601:8020/user/work/test/data/edges.txt"
 
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
