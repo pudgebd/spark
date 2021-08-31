@@ -2,6 +2,7 @@ package pers.pudge.spark.practices.officialApi.g.graphx.louvian
 
 import org.apache.spark.SparkContext
 import org.apache.spark.graphx._
+import org.apache.spark.rdd.RDD
 
 import scala.reflect.ClassTag
 
@@ -49,9 +50,8 @@ class LouvainHarness(minProgress: Int, progressCounter: Int) {
 
       // label each vertex with its best community choice at this level of compression
       val (currentQ, currentGraph, passes) = LouvainCore.louvain(sc, louvainGraph, minProgress, progressCounter)
-      louvainGraph.unpersistVertices(blocking = false)
-
-      saveLevel(sc, level, currentQ, currentGraph)
+      //louvainGraph.unpersistVertices(blocking = false)
+      //saveLevel(sc, level, currentQ, currentGraph)
 
       // If modularity was increased by at least 0.001 compress the graph and repeat
       // halt immediately if the community labeling took less than 3 passes
@@ -59,13 +59,13 @@ class LouvainHarness(minProgress: Int, progressCounter: Int) {
       if (passes > 2 && currentQ > q + 0.001) {
         q = currentQ
         louvainGraph = LouvainCore.compressGraph(currentGraph)
-        currentGraph.unpersist()
-      }
-      else {
+      } else {
         halt = true
       }
+      currentGraph.unpersist()
 
     } while (!halt)
+
     finalSave(sc, level, q, louvainGraph)
   }
 
@@ -85,7 +85,14 @@ class LouvainHarness(minProgress: Int, progressCounter: Int) {
     * override to specify save behavior
     */
   def finalSave(sc: SparkContext, level: Int, q: Double, graph: Graph[VertexState, Long]) = {
+    val tls: RDD[EdgeTriplet[VertexState, Long]] = graph.triplets
 
+    tls.collect().foreach(triplet => {
+      val sa = triplet.srcAttr.toString()
+      val da = triplet.dstAttr.toString()
+
+      println(sa + " is the " + triplet.attr + " of " + da)
+    })
   }
 
 

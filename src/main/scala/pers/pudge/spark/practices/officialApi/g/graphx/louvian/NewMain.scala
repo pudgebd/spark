@@ -1,9 +1,14 @@
 package pers.pudge.spark.practices.officialApi.g.graphx.louvian
 
-import org.apache.spark.graphx.{Edge, Graph}
-import org.apache.spark.sql.SparkSession
+import java.util.concurrent.TimeUnit
+
+import org.apache.spark.graphx.{Edge, Graph, PartitionStrategy}
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.storage.StorageLevel
-import pers.pudge.spark.practices.utils.constants.MT
+import pers.pudge.spark.practices.officialApi.g.graphx.KafkaSsForGraphx.printTriplets
+import pers.pudge.spark.practices.utils.constants.{Key, LocalKafkaCnts, MT}
 
 object NewMain {
 
@@ -67,11 +72,12 @@ object NewMain {
       .appName("graphX analytic")
       .master(MT.LOCAL_MASTER)
       .getOrCreate()
+    import spark.implicits._
     val sc = spark.sparkContext
 
     // read the input into a distributed edge list
     val inputHashFunc = if (ipaddress) (id: String) => IpAddress.toLong(id) else (id: String) => id.toLong
-    var edgeRDD = sc.textFile(edgeFile).map(row => {
+    var offlineEdgeRDD = sc.textFile(edgeFile).map(row => {
       val tokens = row.split(edgedelimiter).map(_.trim())
       tokens.length match {
         case 2 => {
@@ -88,16 +94,81 @@ object NewMain {
 
     // if the parallelism option was set map the input to the correct number of partitions,
     // otherwise parallelism will be based off number of HDFS blocks
-    if (parallelism != -1) edgeRDD = edgeRDD.coalesce(parallelism, shuffle = true)
+    if (parallelism != -1) offlineEdgeRDD = offlineEdgeRDD.coalesce(parallelism, shuffle = true)
+    offlineEdgeRDD.persist(StorageLevel.MEMORY_AND_DISK_SER)
 
-    // create the graph
-    val graph = Graph.fromEdges(edgeRDD, None, StorageLevel.MEMORY_AND_DISK_SER, StorageLevel.MEMORY_AND_DISK_SER)
+    //读取实时边数据，每10秒计算一次
+    val ssDf = spark
+      .readStream
+      .format(Key.KAFKA)
+      .option(Key.KAFKA_BOOTSTRAP_SERVERS, LocalKafkaCnts.BOOTSTRAP_SERVERS)
+      .option(Key.SUBSCRIBE, Key.MYTOPIC02)
+      .load()
 
-    // use a helper class to execute the louvain
-    // algorithm and save the output.
-    // to change the outputs you can extend LouvainRunner.scala
-    val runner = new HDFSLouvainRunner(minProgress, progressCounter, outputdir)
-    runner.run(sc, graph)
+    val ssDf2 = ssDf.selectExpr("CAST(value AS STRING) as value")
+      .flatMap(row => {
+        val valueStr = row.getString(0)
+        val arr = valueStr.split(",")
+        val newArr = arr.filter(_.length == 3)
+        if (newArr.isEmpty) {
+          Seq.empty
+        }
+        Seq(Edge(arr(0).toLong, arr(1).toLong, arr(2).toLong))
+      })
+
+    var kafkaEdgeRdd: RDD[Edge[Long]] = null
+    var mergeKafkaToOfflineCounter = 0
+
+    val query = ssDf2.writeStream
+      .outputMode(OutputMode.Append())
+      .trigger(Trigger.ProcessingTime(10, TimeUnit.SECONDS)) //多久触发一次
+      .foreachBatch((ds, _) => {
+
+      //合并后离线和实时边数据
+      var allEdgeRDD: RDD[Edge[Long]] = null
+      if (kafkaEdgeRdd == null) {
+        kafkaEdgeRdd = ds.rdd
+        kafkaEdgeRdd.persist(StorageLevel.MEMORY_AND_DISK_SER)
+        allEdgeRDD = kafkaEdgeRdd
+
+      } else {
+        val newBatchEdgeRdd = kafkaEdgeRdd.union(ds.rdd)
+        kafkaEdgeRdd.unpersist()
+        kafkaEdgeRdd = newBatchEdgeRdd
+
+        var needUpdateOfflineRdd = false
+        mergeKafkaToOfflineCounter += 1
+
+        if (mergeKafkaToOfflineCounter == 3) {
+          needUpdateOfflineRdd = true
+          mergeKafkaToOfflineCounter = 0
+
+        } else {
+          kafkaEdgeRdd.persist(StorageLevel.MEMORY_AND_DISK_SER)
+        }
+
+        allEdgeRDD = offlineEdgeRDD.union(kafkaEdgeRdd)
+        if (needUpdateOfflineRdd) {
+          kafkaEdgeRdd.unpersist()
+          kafkaEdgeRdd = allEdgeRDD
+          kafkaEdgeRdd.persist(StorageLevel.MEMORY_AND_DISK_SER)
+        }
+      }
+
+      // create the graph
+      val graph = Graph.fromEdges(allEdgeRDD, None, StorageLevel.MEMORY_AND_DISK_SER, StorageLevel.MEMORY_AND_DISK_SER)
+
+      // use a helper class to execute the louvain
+      // algorithm and save the output.
+      // to change the outputs you can extend LouvainRunner.scala
+      val runner = new HDFSLouvainRunner(minProgress, progressCounter, outputdir)
+      runner.run(sc, graph)
+
+    })
+      .start()
+
+    query.awaitTermination()
+
   }
 
 }
