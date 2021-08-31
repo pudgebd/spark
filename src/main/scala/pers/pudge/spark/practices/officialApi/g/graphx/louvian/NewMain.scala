@@ -97,6 +97,7 @@ object NewMain {
     if (parallelism != -1) offlineEdgeRDD = offlineEdgeRDD.coalesce(parallelism, shuffle = true)
     offlineEdgeRDD.setName("offlineEdgeRDD first load")
     offlineEdgeRDD.persist(StorageLevel.MEMORY_AND_DISK_SER)
+    println(offlineEdgeRDD.count())
 
     //读取实时边数据，每10秒计算一次
     val ssDf = spark

@@ -58,7 +58,9 @@ class LouvainHarness(minProgress: Int, progressCounter: Int) {
       //println(s"if ($passes > 2 && $currentQ > $q + 0.001 )")
       if (passes > 2 && currentQ > q + 0.001) {
         q = currentQ
+        louvainGraph.unpersist()
         louvainGraph = LouvainCore.compressGraph(currentGraph)
+        println()
       } else {
         halt = true
       }
