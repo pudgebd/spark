@@ -26,7 +26,7 @@ object IpAddress {
     val bb = ByteBuffer.allocate(8)
     addressBytes.length match {
       case 4 =>
-        bb.put(Array[Byte](0,0,0,0)) // Need a filler
+        bb.put(Array[Byte](0, 0, 0, 0)) // Need a filler
         bb.put(addressBytes)
       case n =>
         throw new IndexOutOfBoundsException("Expected 4 byte address, got " + n)

@@ -2,15 +2,11 @@ package pers.pudge.spark.practices.officialApi.g.graphx.louvian
 
 
 import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
-import org.apache.spark.graphx._
-
-import scala.reflect.ClassTag
 import org.apache.spark.broadcast.Broadcast
-import org.apache.spark.graphx.Graph.graphToGraphOps
+import org.apache.spark.graphx._
 import org.apache.spark.storage.StorageLevel
 
-import scala.math.BigDecimal.double2bigDecimal
+import scala.reflect.ClassTag
 
 /**
   * Provides low level louvain community detection algorithm functions.  Generally used by LouvainHarness
@@ -28,9 +24,9 @@ object LouvainCore {
   def createLouvainGraph[VD: ClassTag](graph: Graph[VD, Long]): Graph[VertexState, Long] = {
     // Create the initial Louvain graph.
     //老版本写法
-//    val nodeWeightMapFunc = (e:EdgeTriplet[VD,Long]) => Iterator((e.srcId,e.attr), (e.dstId,e.attr))
-//    val nodeWeightReduceFunc = (e1:Long,e2:Long) => e1+e2
-//    val nodeWeights = graph.mapReduceTriplets(nodeWeightMapFunc,nodeWeightReduceFunc)
+    //    val nodeWeightMapFunc = (e:EdgeTriplet[VD,Long]) => Iterator((e.srcId,e.attr), (e.dstId,e.attr))
+    //    val nodeWeightReduceFunc = (e1:Long,e2:Long) => e1+e2
+    //    val nodeWeights = graph.mapReduceTriplets(nodeWeightMapFunc,nodeWeightReduceFunc)
     val nodeWeights: VertexRDD[Long] = graph.aggregateMessages[Long](
       triplet => {
         triplet.sendToSrc(triplet.attr)
@@ -110,21 +106,21 @@ object LouvainCore {
         vdata.communitySigmaTot = communityTuple._2
         (vid, vdata)
       }).cache()
-      updatedVerts.count()
+      //updatedVerts.count()
       labeledVerts.unpersist(blocking = false)
       communtiyUpdate.unpersist(blocking = false)
       communityMapping.unpersist(blocking = false)
 
       val prevG = louvainGraph
       louvainGraph = louvainGraph.outerJoinVertices(updatedVerts)((vid, old, newOpt) => newOpt.getOrElse(old))
-      louvainGraph.cache()
+      louvainGraph.persist(StorageLevel.MEMORY_AND_DISK_SER)
 
       // gather community information from each vertex's local neighborhood
       val oldMsgs = msgRDD
       //老版本写法
       //msgRDD = louvainGraph.mapReduceTriplets(sendMsg, mergeMsg).cache()
       msgRDD = louvainGraph.aggregateMessages(sendMsgNew, mergeMsg).persist(StorageLevel.MEMORY_AND_DISK_SER)
-      activeMessages = msgRDD.count() // materializes the graph by forcing computation
+      //activeMessages = msgRDD.count() // materializes the graph by forcing computation
 
       oldMsgs.unpersist(blocking = false)
       updatedVerts.unpersist(blocking = false)
@@ -290,7 +286,7 @@ object LouvainCore {
       state.internalWeight = weight1 + weight2
       state.nodeWeight = 0L
       (vid, state)
-    }).cache()
+    }).persist(StorageLevel.MEMORY_AND_DISK_SER)
 
 
     // translate each vertex edge to a community edge
@@ -299,7 +295,7 @@ object LouvainCore {
       val dst = math.max(et.srcAttr.community, et.dstAttr.community)
       if (src != dst) Iterator(new Edge(src, dst, et.attr))
       else Iterator.empty
-    }).cache()
+    }).persist(StorageLevel.MEMORY_AND_DISK_SER)
 
 
     // generate a new graph where each community of the previous
@@ -326,9 +322,9 @@ object LouvainCore {
       data.communitySigmaTot = weight + data.internalWeight
       data.nodeWeight = weight
       data
-    }).cache()
-    louvainGraph.vertices.count()
-    louvainGraph.triplets.count() // materialize the graph
+    }).persist(StorageLevel.MEMORY_AND_DISK_SER)
+//    louvainGraph.vertices.count()
+//    louvainGraph.triplets.count() // materialize the graph
 
     newVerts.unpersist(blocking = false)
     edges.unpersist(blocking = false)

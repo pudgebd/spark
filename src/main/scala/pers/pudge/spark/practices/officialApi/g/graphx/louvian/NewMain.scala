@@ -2,23 +2,23 @@ package pers.pudge.spark.practices.officialApi.g.graphx.louvian
 
 import org.apache.spark.graphx.{Edge, Graph}
 import org.apache.spark.sql.SparkSession
-import pers.pudge.spark.practices.officialApi.g.graphx.Graphx.APP_NAME
+import org.apache.spark.storage.StorageLevel
 import pers.pudge.spark.practices.utils.constants.MT
 
 object NewMain {
 
-//  val input:String = ""
-//  val output: String = ""
-////  val master:String="local"
-//  val appName:String="graphX analytic"
-////  val jars:String=""
-////  val sparkHome:String=""
-//  val parallelism:Int = -1
-//  val edgedelimiter:String = ","
-//  val minProgress:Int = 2000
-//  val progressCounter:Int = 1
-//  val ipaddress: Boolean = false
-//  val properties:Seq[(String,String)]= Seq.empty[(String,String)]
+  //  val input:String = ""
+  //  val output: String = ""
+  ////  val master:String="local"
+  //  val appName:String="graphX analytic"
+  ////  val jars:String=""
+  ////  val sparkHome:String=""
+  //  val parallelism:Int = -1
+  //  val edgedelimiter:String = ","
+  //  val minProgress:Int = 2000
+  //  val progressCounter:Int = 1
+  //  val ipaddress: Boolean = false
+  //  val properties:Seq[(String,String)]= Seq.empty[(String,String)]
 
   def main(args: Array[String]): Unit = {
 
@@ -70,27 +70,33 @@ object NewMain {
     val sc = spark.sparkContext
 
     // read the input into a distributed edge list
-    val inputHashFunc = if (ipaddress) (id:String) => IpAddress.toLong(id) else (id:String) => id.toLong
-    var edgeRDD = sc.textFile(edgeFile).map(row=> {
+    val inputHashFunc = if (ipaddress) (id: String) => IpAddress.toLong(id) else (id: String) => id.toLong
+    var edgeRDD = sc.textFile(edgeFile).map(row => {
       val tokens = row.split(edgedelimiter).map(_.trim())
       tokens.length match {
-        case 2 => {new Edge(inputHashFunc(tokens(0)),inputHashFunc(tokens(1)),1L) }
-        case 3 => {new Edge(inputHashFunc(tokens(0)),inputHashFunc(tokens(1)),tokens(2).toLong)}
-        case _ => {throw new IllegalArgumentException("invalid input line: "+row)}
+        case 2 => {
+          new Edge(inputHashFunc(tokens(0)), inputHashFunc(tokens(1)), 1L)
+        }
+        case 3 => {
+          new Edge(inputHashFunc(tokens(0)), inputHashFunc(tokens(1)), tokens(2).toLong)
+        }
+        case _ => {
+          throw new IllegalArgumentException("invalid input line: " + row)
+        }
       }
     })
 
     // if the parallelism option was set map the input to the correct number of partitions,
     // otherwise parallelism will be based off number of HDFS blocks
-    if (parallelism != -1) edgeRDD = edgeRDD.coalesce(parallelism, shuffle=true)
+    if (parallelism != -1) edgeRDD = edgeRDD.coalesce(parallelism, shuffle = true)
 
     // create the graph
-    val graph = Graph.fromEdges(edgeRDD, None)
+    val graph = Graph.fromEdges(edgeRDD, None, StorageLevel.MEMORY_AND_DISK_SER, StorageLevel.MEMORY_AND_DISK_SER)
 
     // use a helper class to execute the louvain
     // algorithm and save the output.
     // to change the outputs you can extend LouvainRunner.scala
-    val runner = new HDFSLouvainRunner(minProgress,progressCounter,outputdir)
+    val runner = new HDFSLouvainRunner(minProgress, progressCounter, outputdir)
     runner.run(sc, graph)
   }
 
