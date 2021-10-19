@@ -15,7 +15,10 @@ object ReadParquet {
     val spark = SparkSession.builder().config(conf).getOrCreate()
 
     //val path = "hdfs://localhost:8020/usr/pudgebd/avro/result/counts/parquet_1527049231493"
-    val path = "file:///Users/pudgebd/part-00002-66e623c0-100c-4ba1-8cb2-19661de2f96e-c000.snappy.parquet"
+//    val fileName = "000000_0"
+//    val fileName = "part-00000-22fdb8e3-0f9f-4a8d-baf4-ea1af1eeb255.snappy.parquet"
+    val fileName = "part-00000-db4de558-ac7e-4f6c-9bcd-5465485f9147.snappy.parquet"
+    val path = s"file:///Users/chenqian/Downloads/$fileName"
     val df = spark.read.parquet(path)
     df.show(false)
     println(df.count())

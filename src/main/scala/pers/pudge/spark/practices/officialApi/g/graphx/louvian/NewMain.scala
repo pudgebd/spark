@@ -90,7 +90,7 @@ object NewMain {
           throw new IllegalArgumentException("invalid input line: " + row)
         }
       }
-    })
+    });
 
     // if the parallelism option was set map the input to the correct number of partitions,
     // otherwise parallelism will be based off number of HDFS blocks

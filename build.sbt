@@ -95,6 +95,7 @@ libraryDependencies ++= Seq(
     "com.alibaba" % "fastjson" % "1.2.58",
     "com.github.scopt" %% "scopt" % "3.7.1"
 
+
 ).map(_.exclude("org.slf4j", "*"))
 
 

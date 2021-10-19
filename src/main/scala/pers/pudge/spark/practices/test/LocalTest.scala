@@ -16,7 +16,7 @@ object LocalTest {
   val APP_MAIN = "LocalTest"
 
 
-  def main(args: Array[String]): Unit = {
+  def main1(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .master(MT.LOCAL_MASTER)
       .appName(APP_MAIN)
@@ -52,7 +52,7 @@ object LocalTest {
 //        .write.mode(SaveMode.Overwrite).partitionBy("dt").saveAsTable(LOCAL_HIVE_TABLE)
   }
 
-  def main3(args: Array[String]): Unit = {
+  def main2(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .master(MT.LOCAL_MASTER)
       .appName(APP_MAIN)
@@ -66,7 +66,7 @@ object LocalTest {
     spark.stop()
   }
 
-  def main1(args: Array[String]): Unit = {
+  def main3(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .master(MT.LOCAL_MASTER)
       .appName(APP_MAIN)
@@ -94,6 +94,10 @@ object LocalTest {
 //    val rdd2 = rdd1.map(str => str -> str.length)
 
     spark.stop
+  }
+
+  def main(args: Array[String]): Unit = {
+
   }
 
 }
