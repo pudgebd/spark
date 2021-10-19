@@ -14,24 +14,40 @@ object MultiHiveData {
       .getOrCreate()
     import spark.implicits._
 
-    val readDbAndTbl = args(0)
-    val writeDbAndTbl = args(1)
-    val repartiNum = args(2).toInt
-    val multiNum = args(3).toInt
+    val typee = args(0)
+    val readTarget = args(1)
+    val writeTarget = args(2)
+    val repartiNum = args(3).toInt
+    val multiNum = args(4).toInt
 
-    val df = spark.table(readDbAndTbl)
-//    println(df.count())
-    val newDf = df.repartition(repartiNum)
-      .flatMap(row => {
-        val seq = row.toSeq
-        val range = 0 to multiNum
-        val arr = range.toArray
-        arr.map(idx => Row.fromSeq(seq))
-      })(RowEncoder.apply(df.schema))
-//      .show(false)
-//    println(newDf.count())
+    //hive graph_cmb_test.te_email_dm graph_cmb_test.cq_te_email_dm 2 5
+    if ("hive".equalsIgnoreCase(typee)) {
+      val df = spark.table(readTarget)
+      //    println(df.count())
+      val newDf = df.repartition(repartiNum)
+        .flatMap(row => {
+          val seq = row.toSeq
+          val range = 0 to multiNum
+          val arr = range.toArray
+          arr.map(idx => Row.fromSeq(seq))
+        })(RowEncoder.apply(df.schema))
+      //      .show(false)
+      //    println(newDf.count())
+      newDf.write.mode(SaveMode.Overwrite).saveAsTable(writeTarget)
 
-    newDf.write.mode(SaveMode.Overwrite).saveAsTable(writeDbAndTbl)
+    } else if ("hdfs".equalsIgnoreCase(typee)) {
+
+      //hdfs hdfs://cdh601:8020/user/cmb_gp/offline_graph_search/new_input_param/BATCH_INNER_PATH/433_start_vertices hdfs://cdh601:8020//user/chenqian/433_start_vertices 2 5
+      val ds = spark.read.textFile(readTarget)
+      val newDs = ds.repartition(repartiNum)
+        .flatMap(line => {
+          val range = 0 to multiNum
+          val arr = range.toArray
+          arr.map(idx => line + "")
+        }).coalesce(1)
+      newDs.write.mode(SaveMode.Overwrite).text(writeTarget)
+    }
+
   }
 
 }
