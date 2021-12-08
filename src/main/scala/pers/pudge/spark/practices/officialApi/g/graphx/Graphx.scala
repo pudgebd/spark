@@ -48,7 +48,7 @@ object Graphx extends GraphxBasic {
 //    logNormalGraph(sc)
 //    map(graph)
 //    mask(sc, graph)
-    ops(sc, graph)
+//    ops(sc, graph)
 //    printTriplets(graph)
 //    printTriplets(graph.subgraph(et => true, (vid, vp) => true))
 

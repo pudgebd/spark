@@ -26,13 +26,13 @@ object HiveSqlDemo {
     val sql403 = "select * from graph_cmb_test.te_transfer_dm_v1"
     val sql501 = "select * from default.test_spark_orc"
     val sql601 = "insert into default.zhouyin_te_email_dm select * from graph_cmb_test.te_email_dm"
-    val sql602 = "select * from graph_cmb_test.te_qs_score_dm"
+    val sql602 = "select object_key, clt_ctf_nbr from graph_cmb_test.tv_user"
+    val sql603 = "select object_key, usr_id from graph_cmb_test.tv_n_user"
     val sql701 = "select from_key,to_key,'te_xw_score_dm' schema from graph_cmb_test.te_xw_score_dm  where  from_key is not null and to_key is not null and date_day = '20211112' union all select from_key,to_key,'te_transfer_dm_v1' schema from graph_cmb_test.te_transfer_dm_v1  where  from_key is not null and to_key is not null union all select from_key,to_key,'te_qs_score_dm' schema from graph_cmb_test.te_qs_score_dm  where  from_key is not null and to_key is not null and date_day = '20211112' union all select from_key,to_key,'te_fx_score_dm' schema from graph_cmb_test.te_fx_score_dm  where  from_key is not null and to_key is not null and date_day = '20211112' union all select from_key,to_key,'te_login_dm' schema from graph_cmb_test.te_login_dm  where  from_key is not null and to_key is not null"
 
-
-    val df = spark.sql(sql701)
+    val df = spark.sql(sql603)
     println(df.count())
-    df.show(true)
+    df.show(false)
 //    df.collect().foreach(row => {
 //      println(row.get(0))
 //    })
