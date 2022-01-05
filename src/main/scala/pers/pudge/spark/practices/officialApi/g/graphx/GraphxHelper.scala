@@ -110,47 +110,39 @@ class GraphxHelper {
 
 
   /**
-    * We can use the Pregel operator to express computation such as
-    * single source shortest path in the following example.
-    * 在以下示例中，我们可以使用 Pregel 运算符来表达单源(单个id？)最短路径的计算。
-    *
-    * 参考：
-    * https://www.jianshu.com/p/82efd3edbfdc
+    * 计算最短路径
     */
   def pregel(sc: SparkContext, graph: Graph[(String, String), String]) = {
-//    val vertexRdd: RDD[(VertexId, Long)] = sc.parallelize(Seq((1L, 11L), (2L, 22L), (3L, 33L), (4L, 44L)))
-//    val edgeRdd = sc.parallelize(Seq(Edge(1L, 2L, 12), Edge(1L, 3L, 13), Edge(3L, 4L, 34)))
-//    val graph = Graph(vertexRdd, edgeRdd).partitionBy(PartitionStrategy.CanonicalRandomVertexCut)
+    // Initialize the graph such that all vertices except the root (vid 7) have distance infinity.
+    val graph2 = graph.mapVertices((vid, tp2) => {
+      if (vid == 7) {
+        (tp2._1, 0)
+      } else {
+        (tp2._1, Int.MaxValue)
+      }
+    })
 
-    // A graph with edge attributes containing distances
-    val lng = GraphGenerators.logNormalGraph(sc, numVertices = 100)
-    val graph: Graph[Long, Double] = lng.mapEdges(e => e.attr.toDouble)
-    val sourceId: VertexId = 33 // The ultimate source
-    // Initialize the graph such that all vertices except the root have distance infinity.
-    val initialGraph = graph.mapVertices((id, _) =>
-      if (id == sourceId) 0.0 else Double.PositiveInfinity)
-
-    graph.triplets.collect().foreach(println(_))
-
-    //在迭代计算的过程里，第一次的计算中，每个顶点都会收到initialMsg并参与计算。此后，只有收到消息的顶点才会参与计算。
-    val sssp = initialGraph.pregel(Double.PositiveInfinity) (
-      (id, dist, newDist) => {
-        math.min(dist, newDist)
-      }, //vprog：Vertex Program
+    val pregelGraph = graph2.pregel(Int.MaxValue, 5) (
+      (vid, vAtrr, msg) => {
+        val vname = vAtrr._1
+        val vdist = vAtrr._2
+        vname -> math.min(vdist, msg)
+      },
 
       //pregel算法类似于一个循环，在这个循环中，必须有打破循环一直执行的变量的改变，
       // 这个变量的改变就是sendMsg中发送到某个顶点的信息。该方法应该只在适当的条件下对邻居节点产生影响。
       // 而不应该一直变动。否则这个图是不会消停的。
-      edgeTriplet => { // Send Message
+      edgeTriplet => {
         val srcVid = edgeTriplet.srcId
-        val srcAttr = edgeTriplet.srcAttr
-        val edgeAttr = edgeTriplet.attr
-        val srcAttrPlusEdgeAttr = srcAttr + edgeAttr
+        val srcDist = edgeTriplet.srcAttr._2
         val dstVid = edgeTriplet.dstId
-        val dstAttr = edgeTriplet.dstAttr
-        if (srcAttrPlusEdgeAttr < dstAttr) {
-          val dstId = edgeTriplet.dstId
-          Iterator((dstId, srcAttrPlusEdgeAttr))
+        val dstDist = edgeTriplet.dstAttr._2
+        if (srcDist < dstDist) {
+          Iterator((dstVid, srcDist + 1))
+
+        } else if (dstDist < srcDist) {
+          Iterator(srcVid -> (dstDist + 1))
+
         } else {
           Iterator.empty
         }
@@ -162,14 +154,11 @@ class GraphxHelper {
       // 但要明白他们的作用的区别。
       (a, b) => {
         math.min(a, b)
-      } // Merge Message
+      }
     )
 
-//    println(sssp.vertices.collect.mkString("\n"))
-    val tls = sssp.triplets
-    tls.collect().foreach(triplet => {
-      println(triplet)
-    })
+    pregelGraph.triplets.collect().foreach(println(_))
+    println()
   }
 
 

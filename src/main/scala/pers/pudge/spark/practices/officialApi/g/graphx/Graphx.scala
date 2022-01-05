@@ -2,6 +2,7 @@ package pers.pudge.spark.practices.officialApi.g.graphx
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
+import org.apache.spark.graphx.lib.ShortestPaths
 import org.apache.spark.graphx.util.GraphGenerators
 import org.apache.spark.graphx.{Edge, Graph, GraphLoader, VertexId}
 import org.apache.spark.rdd.RDD
@@ -30,14 +31,25 @@ object Graphx extends GraphxBasic {
     //   点id    人名        职业
 
     val relationships: RDD[Edge[String]] = sc.parallelize(
-      Seq(Edge(3L, 7L, "collab"), Edge(5L, 3L, "advisor"),
-        Edge(2L, 5L, "colleague"), Edge(5L, 7L, "pi"), Edge(11L, 2L, "stranger")))
+      Seq(
+        Edge(3L, 7L, "collab"),
+        Edge(5L, 3L, "advisor"),
+        Edge(2L, 5L, "colleague"),
+        Edge(5L, 7L, "pi"),
+        Edge(11L, 2L, "stranger"),
+        Edge(7L, 11L, "stranger")
+      ))
     //     srcId, dstId, 边属性
 
     val defaultUser = ("Who", "Missing")
 
     // Build the initial Graph
     val graph = Graph(users, relationships, defaultUser)
+
+//    spg.triplets.collect().foreach(triplet => {
+//      println(triplet.toString())
+////      println(triplet.srcAttr._1 + " is the " + triplet.attr + " of " + triplet.dstAttr._1)
+//    })
 
 //    aggregateMessages(spark)
 //    checkpoint(graph)
@@ -48,10 +60,10 @@ object Graphx extends GraphxBasic {
 //    logNormalGraph(sc)
 //    map(graph)
 //    mask(sc, graph)
-//    ops(sc, graph)
+    ops(sc, graph)
 //    printTriplets(graph)
 //    printTriplets(graph.subgraph(et => true, (vid, vp) => true))
-
+//    shortestPaths(graph)
 //    example(sc)
 
     //下面两个不好用，所有点边属性都为1

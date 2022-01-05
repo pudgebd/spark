@@ -2,6 +2,7 @@ package pers.pudge.spark.practices.officialApi.g.graphx
 
 import org.apache.spark.SparkContext
 import org.apache.spark.graphx._
+import org.apache.spark.graphx.lib.{ConnectedComponents, ShortestPaths}
 import org.apache.spark.graphx.util.GraphGenerators
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -65,6 +66,7 @@ class GraphxBasic extends GraphxHelper {
     */
   def connectedComponents(graph: Graph[(String, String), String]) = {
     //TODO maxIterations 填小了会不会出问题？
+    ConnectedComponents.run(graph)
     val cc = graph.connectedComponents()
     //srcAttr打印出来并不是正确的数据
     cc.triplets.collect().foreach(triplet => {
@@ -185,10 +187,17 @@ class GraphxBasic extends GraphxHelper {
 //    degrees(graph)
 //    joinVertices(sc, graph)
 //    outerJoinVertices(sc, graph)
-//    pregel(sc, graph)
+    pregel(sc, graph)
 //    pageRank(sc, ops)
 //    triangleCount(sc)
 
+  }
+
+
+  def shortestPaths(graph: Graph[(String, String), String]) = {
+    val landmarks = Seq(2L)
+    val spg = ShortestPaths.run(graph, landmarks)
+    spg.vertices.collect().foreach(v => println(v))
   }
 
 
