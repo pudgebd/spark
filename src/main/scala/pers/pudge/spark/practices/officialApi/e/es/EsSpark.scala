@@ -20,6 +20,10 @@ object EsSpark {
     val df = spark.createDataset(Seq("c" -> 3, "d" -> 4, "cde" -> 5)).toDF("name", "id")
     df.createOrReplaceTempView("tmp")
 
+    df.withColumnRenamed("name", "id")
+      .withColumnRenamed("id", "id2")
+        .show()
+
 //  val cfg = Map("pushdown" -> "true",
 //    "es.nodes" -> "10.57.22.173,10.57.22.174,10.57.30.219",
 //    "es.port" -> "9200")
