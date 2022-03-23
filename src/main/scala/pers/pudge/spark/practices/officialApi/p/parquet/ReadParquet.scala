@@ -18,7 +18,7 @@ object ReadParquet {
 //    val fileName = "000000_0"
 //    val fileName = "part-00000-22fdb8e3-0f9f-4a8d-baf4-ea1af1eeb255.snappy.parquet"
     val fileName = "part-00000-db4de558-ac7e-4f6c-9bcd-5465485f9147.snappy.parquet"
-    val path = s"file:///Users/chenqian/Downloads/$fileName"
+    val path = s"file:///Users/username/Downloads/$fileName"
     val df = spark.read.parquet(path)
     df.show(false)
     println(df.count())

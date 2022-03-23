@@ -37,7 +37,7 @@ object MultiHiveData {
 
     } else if ("hdfs".equalsIgnoreCase(typee)) {
 
-      //hdfs hdfs://cdh601:8020/user/cmb_gp/offline_graph_search/new_input_param/BATCH_INNER_PATH/433_start_vertices hdfs://cdh601:8020//user/chenqian/433_start_vertices 2 5
+      //hdfs hdfs://cdh601:8020/user/cmb_gp/offline_graph_search/new_input_param/BATCH_INNER_PATH/433_start_vertices hdfs://cdh601:8020//user/username/433_start_vertices 2 5
       val ds = spark.read.textFile(readTarget)
       val newDs = ds.repartition(repartiNum)
         .flatMap(line => {
