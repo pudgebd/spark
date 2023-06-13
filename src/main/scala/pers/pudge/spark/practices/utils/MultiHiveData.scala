@@ -20,7 +20,7 @@ object MultiHiveData {
     val repartiNum = args(3).toInt
     val multiNum = args(4).toInt
 
-    //hive graph_cmb_test.te_email_dm graph_cmb_test.cq_te_email_dm 2 5
+    //hive graph_cmb_test.te_email_dm graph_cmb_test.xxx_te_email_dm 2 5
     if ("hive".equalsIgnoreCase(typee)) {
       val df = spark.table(readTarget)
       //    println(df.count())

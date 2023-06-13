@@ -51,7 +51,7 @@ object HbaseSparkDemo {
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(Key.HBASE_ZOOKEEPER_QUORUM, "cdh217,cdh218,cdh219")
     hbaseConf.set(Key.HBASE_ZOOKEEPER_PROPERTY_CLIENTPORT, "2181")
-    hbaseConf.set(TableInputFormat.INPUT_TABLE, "highroad:cq_table_05")
+    hbaseConf.set(TableInputFormat.INPUT_TABLE, "highroad:xxx_table_05")
 
     val hBaseRdd = spark.sparkContext.newAPIHadoopRDD(hbaseConf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
@@ -61,8 +61,8 @@ object HbaseSparkDemo {
       Row.fromSeq(Seq(Bytes.toDouble(tp._2.getRow)))
     })
     val df = spark.createDataFrame(rdd, new StructType(Array(new StructField("id", DataTypes.DoubleType))))
-    df.createOrReplaceTempView("highroad_cq_table_05")
-    spark.sql("select * from highroad_cq_table_05").show()
+    df.createOrReplaceTempView("highroad_xxx_table_05")
+    spark.sql("select * from highroad_xxx_table_05").show()
 
     println("cost " + (System.currentTimeMillis() - ms) + " ms")
   }

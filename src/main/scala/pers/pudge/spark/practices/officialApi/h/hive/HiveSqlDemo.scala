@@ -31,8 +31,8 @@ object HiveSqlDemo {
     val sql604 = "select * from graph_cmb_test.tv_user where clt_ctf_nbr in ('8928300000002470', '8928300000002474')"
 
     val sql701 = "select object_key, from_key, to_key, 'te_xw_score_dm' edge_schema from graph_cmb_test.te_xw_score_dm where from_key is not null and to_key is not null and date_day = '20211112' union all select object_key, from_key, to_key, 'te_transfer_dm_v1' edge_schema from graph_cmb_test.te_transfer_dm_v1 where from_key is not null and to_key is not null union all select object_key, from_key, to_key, 'te_qs_score_dm' edge_schema from graph_cmb_test.te_qs_score_dm where from_key is not null and to_key is not null and date_day = '20211112' union all select object_key, from_key, to_key, 'te_fx_score_dm' edge_schema from graph_cmb_test.te_fx_score_dm where from_key is not null and to_key is not null and date_day = '20211112' union all select object_key, from_key, to_key, 'te_login_dm' edge_schema from graph_cmb_test.te_login_dm where from_key is not null and to_key is not null"
-    val sql801 = "select * from hangzhou_graph.cq_1kw_te_qs_score_dm limit 1"
-    val sql802 = "select * from hangzhou_graph.cq_200w_tv_user where object_key in ('70DDEE91DD2E4B8F909BA7F9B66877D2', '4F9E5AE5A7054109B7786AE7C2ECBD52')"
+    val sql801 = "select * from hangzhou_graph.xxx_1kw_te_qs_score_dm limit 1"
+    val sql802 = "select * from hangzhou_graph.xxx_200w_tv_user where object_key in ('70DDEE91DD2E4B8F909BA7F9B66877D2', '4F9E5AE5A7054109B7786AE7C2ECBD52')"
 
     val checkKey = "tv_user/ABCD76256FA840D43183D6CCB4EFF63D"
     val sql901 = s"select * from graph_cmb_test.te_office where from_key = '$checkKey' or  to_key = '$checkKey'"

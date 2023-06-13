@@ -34,7 +34,7 @@ object HbaseSparkTest {
         //分批删除
         val seqs = it.sliding(200, 200)
         for (seq <- seqs) {
-          val table = conn.getBufferedMutator(TableName.valueOf("hbase_demo", "cq_hbase_01"))
+          val table = conn.getBufferedMutator(TableName.valueOf("hbase_demo", "xxx_hbase_01"))
           val mutations = new util.ArrayList[Mutation](seq.size)
           for (row <- seq) {
             //防止 row.get(0) 不是 string，一般不可能发生，建表时就限制必须 string

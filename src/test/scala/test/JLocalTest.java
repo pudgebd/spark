@@ -15,7 +15,7 @@ public class JLocalTest {
 
     @Test
     public void Test7() {
-        String str = "insert into cq_table_05 (rowkey, a, b, '";
+        String str = "insert into xxx_table_05 (rowkey, a, b, '";
         System.out.println(str.length());
     }
 
